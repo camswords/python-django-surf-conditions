@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'surf.apps.SurfConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,3 +119,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if 'MAGIC_SEAWEED_API_KEY' not in os.environ:
+    raise RuntimeError('Failed to find the MAGIC_SEAWEED_API_KEY defined in the environment variables. Aborting.')
+
+MAGIC_SEAWEED_API_KEY = os.environ.get('MAGIC_SEAWEED_API_KEY')
+MAGIC_SEAWEED_MANLY_NSW_SPOT_ID = '524'
+MAGIC_SEAWEED_URL = 'http://magicseaweed.com/api/{0}/forecast/?spot_id={1}'.format(MAGIC_SEAWEED_API_KEY, MAGIC_SEAWEED_MANLY_NSW_SPOT_ID)
