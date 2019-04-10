@@ -16,7 +16,6 @@ class SurfReportGatewayResponse:
 
     def parse(self, message):
         latest = max(message, key=lambda m: m['timestamp'])
-        print('latest is', latest)
         min_swell = latest['swell']['absMinBreakingHeight']
         max_swell = latest['swell']['absMaxBreakingHeight']
         local_time = datetime.utcfromtimestamp(latest['localTimestamp'])
