@@ -1,0 +1,13 @@
+
+<h2>Surf Report</h2>
+
+{% if results %}
+    <div class='surf_report'>
+        <p>This report was captured at {{captured_at}}</p>
+        <p>The local time is {{local_time}}</p>
+        <p>The minimum swell is {{min_swell}}</p>
+        <p>The maximum swell is {{max_swell}}</p>
+    </div>
+{% else %}
+    Ah oh! No results found.
+{% endif %}

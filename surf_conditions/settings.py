@@ -81,7 +81,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -120,9 +119,23 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# TODO: understand why this beaks my app, and work out how to get it working
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console', ],
+#         },
+#     },
+# }
+
 if 'MAGIC_SEAWEED_API_KEY' not in os.environ:
     raise RuntimeError('Failed to find the MAGIC_SEAWEED_API_KEY defined in the environment variables. Aborting.')
 
-MAGIC_SEAWEED_API_KEY = os.environ.get('MAGIC_SEAWEED_API_KEY')
+MAGIC_SEAWEED_API_KEY = os.getenv('MAGIC_SEAWEED_API_KEY')
 MAGIC_SEAWEED_MANLY_NSW_SPOT_ID = '524'
 MAGIC_SEAWEED_URL = 'http://magicseaweed.com/api/{0}/forecast/?spot_id={1}'.format(MAGIC_SEAWEED_API_KEY, MAGIC_SEAWEED_MANLY_NSW_SPOT_ID)
+
+

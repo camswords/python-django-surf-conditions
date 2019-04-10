@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class SurfReport(models.Model):
+    captured_at = models.DateTimeField()
+    local_time = models.DateTimeField()
+    min_swell = models.IntegerField()
+    max_swell = models.IntegerField()
