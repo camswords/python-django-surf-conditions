@@ -119,17 +119,22 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# TODO: understand why this beaks my app, and work out how to get it working
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console', ],
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'INFO',
+            'handlers': ['console'],
+        },
+
+    },
+}
 
 if 'MAGIC_SEAWEED_API_KEY' not in os.environ:
     raise RuntimeError('Failed to find the MAGIC_SEAWEED_API_KEY defined in the environment variables. Aborting.')
