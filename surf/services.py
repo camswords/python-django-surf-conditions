@@ -18,7 +18,7 @@ class SurfReportGatewayResponse:
         latest = max(message, key=lambda m: m['timestamp'])
         min_swell = latest['swell']['absMinBreakingHeight']
         max_swell = latest['swell']['absMaxBreakingHeight']
-        local_time = datetime.utcfromtimestamp(latest['localTimestamp'])
+        local_time = timezone.make_aware(datetime.utcfromtimestamp(latest['localTimestamp']))
 
         return SurfReport(captured_at=timezone.now(), local_time=local_time, min_swell=min_swell, max_swell=max_swell)
 
