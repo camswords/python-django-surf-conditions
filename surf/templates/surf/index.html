@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <html>
     <head>
@@ -9,9 +10,27 @@
         <h2>Surf Reports</h2>
 
         <div class='latest_surf_report'>
-            <p class='captured_at'>As of {{latest.captured_at|date:'r'}}, </p>
-            <p class='swell'>Swell is {{latest.min_swell}}m to {{latest.max_swell}}m.</p>
+            <p class='swell'>Current swell is {{latest.min_swell}}m to {{latest.max_swell}}m.</p>
         </div>
+
+        {% if more_reports %}
+            <table class='more_reports'>
+                <thead>
+                    <th>Index</th>
+                    <th>Captured at</th>
+                    <th class='swell'>Swell From (m)</th>
+                    <th class='swell'>Swell To (m)</th>
+                </thead>
+                {% for report in more_reports %}
+                    <tr class="{% cycle 'row_a' 'row_b' %}">
+                        <td>{{forloop.counter}}</td>
+                        <td>{{report.captured_at|naturaltime}}</td>
+                        <td class='swell'>{{latest.min_swell}}</td>
+                        <td class='swell'>{{latest.max_swell}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
 
         <script async src="{% static 'surf/script.js' %}"></script>
     </body>

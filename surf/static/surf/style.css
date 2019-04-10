@@ -6,3 +6,15 @@
 .surf_report .swell {
     font-size: 1rem;
 }
+
+.more_reports th {
+    text-align: left;
+}
+
+.more_reports th, .more_reports td {
+    padding: 0.2rem;
+}
+
+.more_reports .swell {
+    text-align: right;
+}
