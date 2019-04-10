@@ -1,6 +1,6 @@
 from django.conf import settings
 from surf.services import SurfReportGateway
-from .views import SurfReportView
+from .views import SurfReportIndexView
 
 # poor man's dependency injection
 
@@ -8,4 +8,4 @@ from .views import SurfReportView
 surf_report_gateway = SurfReportGateway(settings.MAGIC_SEAWEED_URL, settings.MAGIC_SEAWEED_API_KEY)
 
 # views
-surf_report = SurfReportView(surf_report_gateway).view
+surf_report = SurfReportIndexView(surf_report_gateway).view
