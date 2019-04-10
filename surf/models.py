@@ -6,3 +6,8 @@ class SurfReport(models.Model):
     local_time = models.DateTimeField()
     min_swell = models.FloatField()
     max_swell = models.FloatField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-captured_at']),
+        ]
