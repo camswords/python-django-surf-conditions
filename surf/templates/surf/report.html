@@ -1,13 +1,8 @@
 
 <h2>Surf Report</h2>
 
-{% if results %}
-    <div class='surf_report'>
-        <p>This report was captured at {{captured_at}}</p>
-        <p>The local time is {{local_time}}</p>
-        <p>The minimum swell is {{min_swell}}</p>
-        <p>The maximum swell is {{max_swell}}</p>
-    </div>
-{% else %}
-    Ah oh! No results found.
-{% endif %}
+<div class='surf_report'>
+    <p>The report was captured at {{surf_report.captured_at|date:'r'}}</p>
+    <p>The minimum swell is {{surf_report.min_swell}}</p>
+    <p>The maximum swell is {{surf_report.max_swell}}</p>
+</div>

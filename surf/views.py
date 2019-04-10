@@ -1,8 +1,9 @@
 from django.http import HttpRequest
 from django.shortcuts import render
-
+from django.utils import timezone
 from surf.models import SurfReport
 from surf.services import SurfReportGateway
+import datetime
 
 
 class SurfReportView:
@@ -13,26 +14,17 @@ class SurfReportView:
         # TODO: see if we can see the SQL, and add an index to make sure this query is efficient
         # TODO: it looks like if we slice here that it will be factored into the query - cool!
 
-        count = SurfReport.objects.count()
+        ten_secs_ago = timezone.now() - datetime.timedelta(seconds=10)
 
-        if count == 0:
-            context = {
-                'captured_at': None,
-                'local_time': None,
-                'min_swell': None,
-                'max_swell': None,
-                'results': count,
-            }
-            return render(request, 'surf/report.html', context)
+        # what if more than one result is returned?
+        recent_report = SurfReport.objects.filter(captured_at__gte=ten_secs_ago)
 
-        latest_report = SurfReport.objects.latest('local_time')
-        
-        context = {
-            'captured_at': latest_report.captured_at,
-            'local_time': latest_report.local_time,
-            'min_swell': latest_report.min_swell,
-            'max_swell': latest_report.max_swell,
-            'results': count,
-        }
-        
-        return render(request, 'surf/report.html', context)
+        if not recent_report:
+            recent_report = self.gateway.latest_report()
+            recent_report.save()
+        else:
+            # there may be many results here - possibly not the best solution.
+            # I wonder if we can limit the result set, or make sure an index is applied which will return the latest result set
+            recent_report = recent_report.latest('captured_at')
+
+        return render(request, 'surf/report.html', {'surf_report': recent_report})

@@ -16,11 +16,12 @@ class SurfReportGatewayResponse:
 
     def parse(self, message):
         latest = max(message, key=lambda m: m['timestamp'])
+        print('latest is', latest)
         min_swell = latest['swell']['absMinBreakingHeight']
         max_swell = latest['swell']['absMaxBreakingHeight']
-        local_time = datetime.utcfromtimestamp(latest['local_timestamp'])
+        local_time = datetime.utcfromtimestamp(latest['localTimestamp'])
 
-        return SurfReport(captured_at=timezone.now(), local_time=local_time, minimum_swell=min_swell, max_swell=max_swell)
+        return SurfReport(captured_at=timezone.now(), local_time=local_time, min_swell=min_swell, max_swell=max_swell)
 
 
 class SurfReportGateway:
@@ -30,6 +31,9 @@ class SurfReportGateway:
         self.api_key = api_key
 
     def latest_report(self):
+        if not self.api_key:
+            raise AttributeError('unable to contact the surf gateway as the api key is missing.')
+
         response = requests.get(self.url)
 
         if response.status_code != 200:
