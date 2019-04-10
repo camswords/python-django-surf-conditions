@@ -11,9 +11,6 @@ class SurfReportView:
         self.gateway = gateway
 
     def view(self, request: HttpRequest):
-        # TODO: see if we can see the SQL, and add an index to make sure this query is efficient
-        # TODO: it looks like if we slice here that it will be factored into the query - cool!
-
         ten_secs_ago = timezone.now() - datetime.timedelta(seconds=10)
 
         # what if more than one result is returned?
@@ -27,4 +24,4 @@ class SurfReportView:
             # I wonder if we can limit the result set, or make sure an index is applied which will return the latest result set
             recent_report = recent_report.latest('captured_at')
 
-        return render(request, 'surf/report.html', {'surf_report': recent_report})
+        return render(request, 'surf/latest-report.html', {'surf_report': recent_report})

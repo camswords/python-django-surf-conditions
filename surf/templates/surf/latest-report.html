@@ -1,0 +1,9 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'surf/style.css' %}">
+
+<h2>Latest Surf Report</h2>
+
+<div class='surf_report'>
+    <p class='captured_at'>The report was captured at {{surf_report.captured_at|date:'r'}}</p>
+    <p class='swell'>Swell from {{surf_report.min_swell}}m to {{surf_report.max_swell}}m.</p>
+</div>
