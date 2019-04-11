@@ -7,12 +7,22 @@
     font-size: 1rem;
 }
 
-.more_reports th {
+.more_reports {
+    border-collapse: collapse;
+}
+
+.more_reports .row_a:hover, .more_reports .row_b:hover {
+    cursor: pointer;
+    background-color: #a9d5de;
+}
+
+.more_reports td, .more_reports th {
+    padding: 0.2rem 1rem;
     text-align: left;
 }
 
-.more_reports th, .more_reports td {
-    padding: 0.2rem;
+.more_reports .row_a {
+    background-color: #dceeee;
 }
 
 .more_reports .swell {

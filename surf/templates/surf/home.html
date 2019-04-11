@@ -23,8 +23,8 @@
                     <th class='swell'>Swell To (m)</th>
                 </thead>
                 {% for report in more_reports %}
-                    <tr class="{% cycle 'row_a' 'row_b' %}">
-                        <td><a href="{% url 'surf:surf_report' report.id %}">{{forloop.counter}}</a></td>
+                    <tr class="{% cycle 'row_a' 'row_b' %}" data-url="{% url 'surf:surf_report' report.id %}">
+                        <td>{{forloop.counter}}</td>
                         <td>{{report.id}}</td>
                         <td>{{report.captured_at|naturaltime}}</td>
                         <td class='swell'>{{latest.min_swell}}</td>
