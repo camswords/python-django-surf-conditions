@@ -23,10 +23,10 @@ class SurfReportIndexView:
             new_report.save()
             latest_reports = [new_report] + latest_reports
 
-        return latest_reports[:1][0], latest_reports[1:]
+        return latest_reports[:1][0], latest_reports[1:limit]
 
     def view(self, request: HttpRequest):
-        latest, rest = self.__get_latest_reports(10)
+        latest, rest = self.__get_latest_reports(11)
 
         context = {
             'latest': latest,
