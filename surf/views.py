@@ -1,15 +1,18 @@
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.utils import timezone
+from django.views.generic.detail import DetailView
+
 from surf.models import SurfReport
 from surf.services import SurfReportGateway
 import datetime
 
 
-class SurfReportIndexView:
+class SurfReportHomeView:
     def __init__(self, gateway: SurfReportGateway):
         self.gateway = gateway
 
+    # TODO: move this to the model class I think
     def __get_latest_reports(self, limit):
         latest_reports = list(SurfReport.objects.order_by('-captured_at')[:limit])
 
@@ -33,4 +36,14 @@ class SurfReportIndexView:
             'more_reports': rest,
         }
 
-        return render(request, 'surf/index.html', context)
+        return render(request, 'surf/home.html', context)
+
+
+class SurfReportDetailView(DetailView):
+    model = SurfReport
+    context_object_name = 'surf_report'
+    template_name = 'surf/surf_report.html'
+
+
+
+

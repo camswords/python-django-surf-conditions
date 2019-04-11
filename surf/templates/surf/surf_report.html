@@ -1,0 +1,23 @@
+{% load static %}
+{% load humanize %}
+
+<html lang="en">
+    <head>
+        <link rel='stylesheet' type='text/css' href="{% static 'surf/style.css' %}" />
+        <title>Surf Report</title>
+    </head>
+    <body>
+        <h2>Surf Report {{surf_report.id}}</h2>
+
+        <div class='surf_report_details'>
+            <p class='at-time'>At {{surf_report.captured_at|date:'r'}} ({{surf_report.captured_at|naturaltime}}),</p>
+            <p class='swell'>Swell was {{surf_report.min_swell}}m to {{surf_report.max_swell}}m.</p>
+        </div>
+
+        <div>
+            <a href="{% url 'surf:home' %}">Home</a>
+        </div>
+
+        <script async src="{% static 'surf/script.js' %}"></script>
+    </body>
+</html>
