@@ -1,11 +1,14 @@
-from django.http import HttpRequest
+import datetime
+
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic.detail import DetailView
 
-from surf.models import SurfReport
+from surf.forms import TagForm
+from surf.models import SurfReport, Tag
 from surf.services import SurfReportGateway
-import datetime
 
 
 class SurfReportHomeView:
@@ -45,5 +48,17 @@ class SurfReportDetailView(DetailView):
     template_name = 'surf/surf_report.html'
 
 
+class CreateTagView:
+    def view(self, request: HttpRequest):
+        if request.method == 'POST':
+            form = TagForm(request.POST)
 
+            if form.is_valid():
+                tag = Tag(form.cleaned_data['label'])
+                tag.save()
+                return HttpResponseRedirect(reverse('surf:home'))
 
+            # TODO: deal with form errors
+            # TODO: ensure that tags are unique, both in the database and enforced by our app using custom validation
+
+        return render(request, 'surf/new_tag.html', {'form': TagForm()})
