@@ -5,6 +5,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+    <h4>Latest conditions</h4>
     <div class='latest_surf_report'>
         <p class='swell'>Current swell is {{latest.min_swell}}m to {{latest.max_swell}}m.</p>
         <p class='tags'>
@@ -14,6 +15,7 @@
         </p>
     </div>
 
+    <h4>Previous conditions</h4>
     {% if more_reports %}
         <table class='more_reports'>
             <thead>

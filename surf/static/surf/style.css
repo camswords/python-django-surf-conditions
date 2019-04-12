@@ -6,6 +6,10 @@ body {
     color: rgba(0, 0, 0, 0.8);
 }
 
+h4 {
+    margin: 1rem 0 0.5rem 0;
+}
+
 .content {
     width: 100%;
     max-width: 700px;
@@ -30,11 +34,19 @@ body {
 
 .more_reports {
     border-collapse: collapse;
+    margin: 0 -1rem;
+    width: calc(100% + 2rem);
+    font-size: 0.8rem;
 }
 
 .more_reports .row_a:hover, .more_reports .row_b:hover {
     cursor: pointer;
     background-color: #a9d5de;
+}
+
+.more_reports th {
+    font-weight: normal;
+    text-decoration: underline;
 }
 
 .more_reports td, .more_reports th {
@@ -86,6 +98,8 @@ body {
 .navigation_menu .menu {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-direction: row;
 }
 
 .navigation_menu .menu .menu_item a {

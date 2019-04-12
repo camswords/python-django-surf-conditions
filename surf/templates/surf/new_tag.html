@@ -1,23 +1,11 @@
-{% load static %}
+{% extends "./frame.html" %}
 
-<html lang="en">
-    <head>
-        <link rel='stylesheet' type='text/css' href="{% static 'surf/style.css' %}" />
-        <title>Surf Report</title>
-    </head>
-    <body>
-        <h2>New tag</h2>
+{% block title %}New tag{% endblock %}
 
-        <form action="{% url 'surf:new_tag' %}" method='post'>
-            {% csrf_token %}
-            {{form}}
-            <input type='submit' value='Create' />
-        </form>
-
-        <div>
-            <a href="{% url 'surf:home' %}">Home</a>
-        </div>
-
-        <script async src="{% static 'surf/script.js' %}"></script>
-    </body>
-</html>
+{% block content %}
+    <form action="{% url 'surf:new_tag' %}" method='post'>
+        {% csrf_token %}
+        {{form}}
+        <input type='submit' value='Create' />
+    </form>
+{% endblock %}}
