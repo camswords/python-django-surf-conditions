@@ -12,6 +12,7 @@ surf_report_gateway = SurfReportGateway(settings.MAGIC_SEAWEED_URL, settings.MAG
 
 urlpatterns = [
     path('', SurfReportHomeView(surf_report_gateway).view, name='home'),
-    path('<int:pk>/', views.SurfReportDetailView.as_view(), name='surf_report'),
+    path('<int:pk>/', views.SurfReportDetailView().view, name='surf_report'),
+    path('<int:pk>/tag/add', views.AddTagView().view, name='add_tag'),
     path('tag/new', views.CreateTagView().view, name='new_tag'),
 ]

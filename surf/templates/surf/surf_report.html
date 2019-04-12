@@ -10,8 +10,28 @@
         <h2>Surf Report {{surf_report.id}}</h2>
 
         <div class='surf_report_details'>
-            <p class='at-time'>At {{surf_report.captured_at|date:'r'}} ({{surf_report.captured_at|naturaltime}}),</p>
-            <p class='swell'>Swell was {{surf_report.min_swell}}m to {{surf_report.max_swell}}m.</p>
+            <div class='at_time'>At {{surf_report.captured_at|date:'r'}} ({{surf_report.captured_at|naturaltime}}),</div>
+            <div class='swell'>Swell was {{surf_report.min_swell}}m to {{surf_report.max_swell}}m.</div>
+            <div class='tags'>
+                {% for tag in tags %}
+                    <div class='tag'>{{tag.label}}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class='add_tags'>
+            <form action="{% url 'surf:add_tag' surf_report.id %}" method='post'>
+                {% csrf_token %}
+                <label>
+                    Tag
+                    <select name='tag'>
+                        {% for tag in all_tags %}
+                            <option value="{{tag.id}}">{{tag.label}}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <input type='submit' value='Add tag' />
+            </form>
         </div>
 
         <div>

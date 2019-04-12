@@ -1,5 +1,6 @@
 {% load static %}
 {% load humanize %}
+{% load surf_custom_filters %}
 
 <html lang="en">
     <head>
@@ -11,6 +12,11 @@
 
         <div class='latest_surf_report'>
             <p class='swell'>Current swell is {{latest.min_swell}}m to {{latest.max_swell}}m.</p>
+            <p class='tags'>
+                {% for tag in latest_tags %}
+                    <div class='tag'>{{tag.label}}</div>
+                {% endfor %}
+            </p>
         </div>
 
         {% if more_reports %}
@@ -21,6 +27,7 @@
                     <th>Captured at</th>
                     <th class='swell'>Swell From (m)</th>
                     <th class='swell'>Swell To (m)</th>
+                    <th class='tag'>Tags</th>
                 </thead>
                 {% for report in more_reports %}
                     <tr class="{% cycle 'row_a' 'row_b' %}" data-url="{% url 'surf:surf_report' report.id %}">
@@ -29,6 +36,11 @@
                         <td>{{report.captured_at|naturaltime}}</td>
                         <td class='swell'>{{latest.min_swell}}</td>
                         <td class='swell'>{{latest.max_swell}}</td>
+                        <td class='tags'>
+                            {% for tag in more_reports_tags|get_value:report.id %}
+                                <div class='tag'>{{tag.label}}</div>
+                            {% endfor %}
+                        </td>
                     </tr>
                 {% endfor %}
             </table>

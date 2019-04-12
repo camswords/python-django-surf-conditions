@@ -1,10 +1,9 @@
 import datetime
 
 from django.http import HttpRequest, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.views.generic.detail import DetailView
 
 from surf.forms import TagForm
 from surf.models import SurfReport, Tag
@@ -33,19 +32,28 @@ class SurfReportHomeView:
 
     def view(self, request: HttpRequest):
         latest, rest = self.__get_latest_reports(11)
+        # TODO: we can make this more efficient using a single call to the db
 
         context = {
             'latest': latest,
+            'latest_tags': latest.tags.all(),
             'more_reports': rest,
+            'more_reports_tags': dict(zip((report.id for report in rest), (report.tags.all() for report in rest))),
         }
 
         return render(request, 'surf/home.html', context)
 
 
-class SurfReportDetailView(DetailView):
-    model = SurfReport
-    context_object_name = 'surf_report'
-    template_name = 'surf/surf_report.html'
+class SurfReportDetailView:
+    def view(self, request: HttpRequest, **url_params):
+        surf_report = get_object_or_404(SurfReport, pk=url_params['pk'])
+
+        context = {
+            'surf_report': surf_report,
+            'tags': surf_report.tags.all(),
+            'all_tags': Tag.objects.all(),
+        }
+        return render(request, 'surf/surf_report.html', context)
 
 
 class CreateTagView:
@@ -54,7 +62,7 @@ class CreateTagView:
             form = TagForm(request.POST)
 
             if form.is_valid():
-                tag = Tag(form.cleaned_data['label'])
+                tag = Tag(label=form.cleaned_data['label'])
                 tag.save()
                 return HttpResponseRedirect(reverse('surf:home'))
 
@@ -62,3 +70,13 @@ class CreateTagView:
             # TODO: ensure that tags are unique, both in the database and enforced by our app using custom validation
 
         return render(request, 'surf/new_tag.html', {'form': TagForm()})
+
+
+class AddTagView:
+    def view(self, request: HttpRequest, **url_params):
+        surf_report = get_object_or_404(SurfReport, pk=url_params['pk'])
+        tag = get_object_or_404(Tag, pk=request.POST['tag'])
+
+        surf_report.tags.add(tag)
+        surf_report.save()
+        return HttpResponseRedirect(reverse('surf:home'))
