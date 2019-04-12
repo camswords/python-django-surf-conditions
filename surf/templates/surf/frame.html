@@ -1,0 +1,27 @@
+{% load static %}
+
+<html lang="en">
+    <head>
+        <link rel='stylesheet' type='text/css' href="{% static 'surf/style.css' %}" />
+        <title>Surf Report</title>
+    </head>
+    <body>
+        <div class='page_frame'>
+            <div class='navigation_menu'>
+                <div class='site_title'>Surf Conditions</div>
+
+                <ul class='menu'>
+                    <li class='menu_item'>
+                        <a href="{% url 'surf:home' %}">Home</a>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 class='page_title'>{% block title %}{% endblock %}</h2>
+
+            <div class='content'>{% block content %}{% endblock %}</div>
+        </div>
+
+        <script async src="{% static 'surf/script.js' %}"></script>
+    </body>
+</html>

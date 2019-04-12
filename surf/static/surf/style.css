@@ -1,4 +1,25 @@
 
+body {
+    font-family: verdana, serif;
+    margin: 0;
+    background-color: #f0f0f0;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.content {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid #6e6e6e;
+}
+
+.page_title {
+    margin: 1.5rem 0 1rem 0;
+    text-align: center;
+}
+
 .surf_report .captured_at {
     font-size: 0.8rem;
 }
@@ -45,4 +66,37 @@
 
 .surf_report_details >div {
     margin: 0.3rem 0;
+}
+
+.navigation_menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid black;
+    padding: 0 2rem;
+    background-color: white;
+}
+
+.navigation_menu .site_title {
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.navigation_menu .menu {
+    list-style: none;
+    padding: 0;
+}
+
+.navigation_menu .menu .menu_item a {
+    padding: 1rem;
+    color: blue;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.navigation_menu .menu .menu_item a:hover {
+    text-decoration: underline;
 }
