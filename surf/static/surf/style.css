@@ -114,3 +114,7 @@ h4 {
 .navigation_menu .menu .menu_item a:hover {
     text-decoration: underline;
 }
+
+form .errorlist {
+    color: darkred;
+}

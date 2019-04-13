@@ -66,10 +66,11 @@ class CreateTagView:
                 tag.save()
                 return HttpResponseRedirect(reverse('surf:home'))
 
-            # TODO: deal with form errors
             # TODO: ensure that tags are unique, both in the database and enforced by our app using custom validation
+        else:
+            form = TagForm()
 
-        return render(request, 'surf/new_tag.html', {'form': TagForm()})
+        return render(request, 'surf/new_tag.html', {'form': form})
 
 
 class AddTagView:
