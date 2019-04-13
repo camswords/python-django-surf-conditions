@@ -1,7 +1,6 @@
 import os
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 
 MAGIC_SEAWEED_API_KEY = getattr(settings, 'SURF_MAGICSEAWEED_API_KEY', os.getenv('MAGIC_SEAWEED_API_KEY', None))
 MAGIC_SEAWEED_MANLY_NSW_SPOT_ID = '524'
