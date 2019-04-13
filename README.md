@@ -1,6 +1,8 @@
-# Python play-app: Manly Surf Conditions
+# Manly Surf Conditions
 
-A simple Django application demonstrating database integration, using external rest apis, templating and forms. Shows the latest surf conditions in Manly, NSW.
+A simple Django application demonstrating database integration, using external rest apis, templating, static assets and forms. Shows the latest surf conditions in Manly, NSW.
+
+![Manly Surf App](https://github.com/camswords/python-django-surf-conditions/raw/master/media/surf-conditions.png)
 
 ### Getting Started
 
