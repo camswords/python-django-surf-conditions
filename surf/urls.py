@@ -1,4 +1,4 @@
-from django.conf import settings
+from . import settings
 from django.urls import path
 
 from surf.services import SurfReportGateway
