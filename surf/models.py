@@ -16,5 +16,3 @@ class SurfReport(models.Model):
         indexes = [
             models.Index(fields=['-captured_at']),
         ]
-
-    # TODO: check the indexes that are used when searching for tags from surf reports

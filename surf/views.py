@@ -1,9 +1,6 @@
-import datetime
-
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.utils import timezone
 
 from surf.forms import TagForm
 from surf.models import SurfReport, Tag
@@ -11,27 +8,11 @@ from surf.services import SurfReportGateway
 
 
 class SurfReportHomeView:
-    def __init__(self, gateway: SurfReportGateway):
+    def __init__(self, gateway=SurfReportGateway()):
         self.gateway = gateway
 
-    # TODO: move this to the model class I think
-    def __get_latest_reports(self, limit):
-        latest_reports = list(SurfReport.objects.order_by('-captured_at')[:limit])
-
-        if not latest_reports:
-            new_report = self.gateway.latest_report()
-            new_report.save()
-            latest_reports = [new_report]
-
-        elif latest_reports[:1][0].captured_at < timezone.now() - datetime.timedelta(seconds=10):
-            new_report = self.gateway.latest_report()
-            new_report.save()
-            latest_reports = [new_report] + latest_reports
-
-        return latest_reports[:1][0], latest_reports[1:limit]
-
-    def view(self, request: HttpRequest):
-        latest, rest = self.__get_latest_reports(11)
+    def view(self, request):
+        latest, rest = self.gateway.get_or_retrieve_reports(limit=11, stale_after_seconds=2)
         # TODO: we can make this more efficient using a single call to the db
 
         context = {
@@ -45,7 +26,7 @@ class SurfReportHomeView:
 
 
 class SurfReportDetailView:
-    def view(self, request: HttpRequest, **url_params):
+    def view(self, request, **url_params):
         surf_report = get_object_or_404(SurfReport, pk=url_params['pk'])
 
         context = {
@@ -57,7 +38,7 @@ class SurfReportDetailView:
 
 
 class CreateTagView:
-    def view(self, request: HttpRequest):
+    def view(self, request):
         if request.method == 'POST':
             form = TagForm(request.POST)
 
@@ -71,7 +52,7 @@ class CreateTagView:
 
 
 class AddTagView:
-    def view(self, request: HttpRequest, **url_params):
+    def view(self, request, **url_params):
         surf_report = get_object_or_404(SurfReport, pk=url_params['pk'])
         tag = get_object_or_404(Tag, pk=request.POST['tag'])
 
