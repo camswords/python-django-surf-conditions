@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Tag(models.Model):
-    label = models.CharField(max_length=30)
+    label = models.CharField(max_length=30, unique=True)
 
 
 class SurfReport(models.Model):
@@ -10,7 +10,7 @@ class SurfReport(models.Model):
     local_time = models.DateTimeField()
     min_swell = models.FloatField()
     max_swell = models.FloatField()
-    tags = models.ManyToManyField(Tag)              # this is on SurfReport because that's how we want to access the tags.
+    tags = models.ManyToManyField(Tag)
 
     class Meta:
         indexes = [

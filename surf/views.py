@@ -62,11 +62,8 @@ class CreateTagView:
             form = TagForm(request.POST)
 
             if form.is_valid():
-                tag = Tag(label=form.cleaned_data['label'])
-                tag.save()
+                Tag.objects.get_or_create(label=form.cleaned_data['label'])
                 return HttpResponseRedirect(reverse('surf:home'))
-
-            # TODO: ensure that tags are unique, both in the database and enforced by our app using custom validation
         else:
             form = TagForm()
 

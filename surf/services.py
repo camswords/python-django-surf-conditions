@@ -1,5 +1,4 @@
 import requests
-# TODO: investigate using urllib.request instead of requests
 from django.utils import timezone
 from datetime import datetime
 
