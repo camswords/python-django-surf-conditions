@@ -59,3 +59,16 @@ class AddTagView:
         surf_report.tags.add(tag)
         surf_report.save()
         return HttpResponseRedirect(reverse('surf:home'))
+
+
+class FetchReportView:
+    def __init__(self, gateway=SurfReportGateway()):
+        self.gateway = gateway
+
+    def view(self, request):
+        if request.method == 'POST':
+            report = self.gateway.latest_report()
+            report.save()
+
+        return HttpResponseRedirect(reverse('surf:home'))
+

@@ -29,23 +29,6 @@ class SurfReportGateway:
         self.url = url
         self.api_key = api_key
 
-    def get_or_retrieve_reports(self, **args):
-        limit = args.get('limit', 10)
-        stale_after_seconds = args.get('stale_after_seconds', 10)
-        latest_reports = list(SurfReport.objects.order_by('-captured_at')[:limit])
-
-        if not latest_reports:
-            new_report = self.latest_report()
-            new_report.save()
-            latest_reports = [new_report]
-
-        elif latest_reports[:1][0].captured_at < timezone.now() - timedelta(seconds=stale_after_seconds):
-            new_report = self.latest_report()
-            new_report.save()
-            latest_reports = [new_report] + latest_reports
-
-        return latest_reports[:1][0], latest_reports[1:limit]
-
     def latest_report(self):
         if not self.api_key:
             raise ImproperlyConfigured('unable to contact the surf gateway as the api key is missing.')

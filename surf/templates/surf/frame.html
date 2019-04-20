@@ -13,6 +13,12 @@
                 <ul class='menu'>
                     <li class='menu_item'><a href="{% url 'surf:home' %}">Home</a></li>
                     <li class='menu_item'><a href="{% url 'surf:new_tag' %}">Add tag</a></li>
+                    <li class='menu_item'>
+                        <form action="{% url 'surf:fetch_report' %}" method='post' class='fetch_report_menu_item'>
+                            {% csrf_token %}
+                            <input type='submit' value='Fetch report' class='submit_fetch_report' />
+                        </form>
+                    </li>
                 </ul>
             </div>
 

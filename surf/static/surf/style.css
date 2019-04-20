@@ -100,9 +100,10 @@ h4 {
     padding: 0;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
-.navigation_menu .menu .menu_item a {
+.navigation_menu .menu .menu_item a, .navigation_menu .menu .menu_item .submit_fetch_report {
     padding: 1rem;
     color: blue;
     text-decoration: none;
@@ -111,10 +112,28 @@ h4 {
     text-transform: uppercase;
 }
 
-.navigation_menu .menu .menu_item a:hover {
+.navigation_menu .menu .menu_item a:hover, .navigation_menu .menu .menu_item .submit_fetch_report:hover {
     text-decoration: underline;
+}
+
+.navigation_menu .menu .menu_item .fetch_report_menu_item {
+    margin: 0;
+}
+
+.navigation_menu .menu .menu_item .submit_fetch_report {
+    background: transparent;
+    border: none;
+    font-family: verdana, serif;
 }
 
 form .errorlist {
     color: darkred;
+}
+
+.latest_surf_report .swell {
+    margin: 1rem 0;
+}
+
+.previous-header {
+    margin: 2rem 0 0.5rem 0;
 }
