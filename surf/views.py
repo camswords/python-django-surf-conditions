@@ -45,6 +45,18 @@ class CreateTagView:
         return render(request, 'surf/new_tag.html', {'form': form})
 
 
+class ShowTagView:
+    def view(self, request, **url_params):
+        tag = get_object_or_404(Tag, pk=url_params['pk'])
+        reports = SurfReport.objects.prefetch_related('tags').filter(tags=tag).order_by('-captured_at')
+
+        context = {
+            'tag': tag,
+            'reports': reports,
+        }
+        return render(request, 'surf/show_tag.html', context)
+
+
 class AddTagView:
     def view(self, request, **url_params):
         surf_report = get_object_or_404(SurfReport, pk=url_params['pk'])

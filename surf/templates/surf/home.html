@@ -41,7 +41,7 @@
                     <td class='swell'>{{report.max_swell|floatformat:2}}m</td>
                     <td class='tags'>
                         {% for tag in report.tags.all %}
-                            <div class='tag'>{{tag.label}}</div>
+                            <a href="{% url 'surf:show_tag' tag.id %}" class='tag'>{{tag.label}}</a>
                         {% endfor %}
                     </td>
                 </tr>
