@@ -6,36 +6,41 @@
 
 {% block content %}
     <h4>Latest conditions</h4>
-    <div class='latest_surf_report'>
-        <p class='swell'>Current swell is {{latest.min_swell}}m to {{latest.max_swell}}m.</p>
-        <p class='tags'>
-            {% for tag in latest_tags %}
-                <div class='tag'>{{tag.label}}</div>
-            {% endfor %}
-        </p>
-    </div>
+    {% if latest %}
+        <div class='latest_surf_report'>
+            <div class='swell'>Current swell is {{latest.min_swell|floatformat:2}}m to {{latest.max_swell|floatformat:2}}m.</div>
+            <div class='tags'>
+                {% for tag in latest.tags.all %}
+                    <div class='tag'>{{tag.label}}</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class='no_surf_reports'>There are no surf reports, conditions unknown.</div>
+    {% endif %}
 
-    {% if more_reports %}
-        <h4>Previous conditions</h4>
+    {% if reports %}
+        <h4 class='previous-header'>Previous conditions</h4>
 
         <table class='more_reports'>
             <thead>
                 <th>Index</th>
                 <th>Id</th>
                 <th>Captured at</th>
-                <th class='swell'>Swell From (m)</th>
-                <th class='swell'>Swell To (m)</th>
+                <th class='swell'>Swell From</th>
+                <th class='swell'>Swell To</th>
                 <th class='tag'>Tags</th>
             </thead>
-            {% for report in more_reports %}
+
+            {% for report in reports %}
                 <tr class="{% cycle 'row_a' 'row_b' %}" data-url="{% url 'surf:surf_report' report.id %}">
                     <td>{{forloop.counter}}</td>
                     <td>{{report.id}}</td>
                     <td>{{report.captured_at|naturaltime}}</td>
-                    <td class='swell'>{{latest.min_swell}}</td>
-                    <td class='swell'>{{latest.max_swell}}</td>
+                    <td class='swell'>{{report.min_swell|floatformat:2}}m</td>
+                    <td class='swell'>{{report.max_swell|floatformat:2}}m</td>
                     <td class='tags'>
-                        {% for tag in more_reports_tags|get_value:report.id %}
+                        {% for tag in report.tags.all %}
                             <div class='tag'>{{tag.label}}</div>
                         {% endfor %}
                     </td>

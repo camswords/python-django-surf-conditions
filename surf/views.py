@@ -8,18 +8,12 @@ from surf.services import SurfReportGateway
 
 
 class SurfReportHomeView:
-    def __init__(self, gateway=SurfReportGateway()):
-        self.gateway = gateway
-
     def view(self, request):
-        latest, rest = self.gateway.get_or_retrieve_reports(limit=11, stale_after_seconds=2)
-        # TODO: we can make this more efficient using a single call to the db
+        reports = SurfReport.objects.all().prefetch_related('tags').order_by('-captured_at')[:11]
 
         context = {
-            'latest': latest,
-            'latest_tags': latest.tags.all(),
-            'more_reports': rest,
-            'more_reports_tags': dict(zip((report.id for report in rest), (report.tags.all() for report in rest))),
+            'latest': reports[0] if reports else None,
+            'reports': reports[1:],
         }
 
         return render(request, 'surf/home.html', context)
