@@ -7,6 +7,7 @@
     <div class='surf_report_details'>
         <div class='at_time'>{{surf_report.captured_at|date:'r'}} ({{surf_report.captured_at|naturaltime}})</div>
         <div class='swell'>Swell was {{surf_report.min_swell}}m to {{surf_report.max_swell}}m.</div>
+        <div class='notes'>{{surf_report.note}}</div>
         <div class='tags'>
             {% for tag in tags %}
                 <div class='tag'>{{tag.label}}</div>

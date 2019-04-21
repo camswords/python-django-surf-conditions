@@ -4,7 +4,7 @@ import requests
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
-from surf.models import SurfReport
+from surf.models import SurfReport, Note
 from . import settings
 
 
@@ -20,8 +20,11 @@ class SurfReportGatewayResponse:
         min_swell = latest['swell']['absMinBreakingHeight']
         max_swell = latest['swell']['absMaxBreakingHeight']
         local_time = timezone.make_aware(datetime.utcfromtimestamp(latest['localTimestamp']))
+        note = Note.generate()
 
-        return SurfReport(captured_at=timezone.now(), local_time=local_time, min_swell=min_swell, max_swell=max_swell)
+        return SurfReport(captured_at=timezone.now(), local_time=local_time,
+                          min_swell=min_swell, max_swell=max_swell,
+                          note=note)
 
 
 class SurfReportGateway:
