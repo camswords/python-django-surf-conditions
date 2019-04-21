@@ -14,9 +14,24 @@ class SurfReport(models.Model):
     tags = models.ManyToManyField(Tag)
     note = models.TextField(max_length=150)
 
+    @staticmethod
+    def search(text):
+        if not text:
+            return []
+
+        return SurfReport.objects.prefetch_related('tags').filter(note__icontains=text)[:10]
+
+    @staticmethod
+    def search_count(text):
+        if not text:
+            return 0
+
+        return SurfReport.objects.prefetch_related('tags').filter(note__icontains=text).count()
+
     class Meta:
         indexes = [
             models.Index(fields=['-captured_at']),
+            models.Index(fields=['note']),
         ]
 
 

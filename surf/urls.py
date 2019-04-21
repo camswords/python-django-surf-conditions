@@ -12,4 +12,5 @@ urlpatterns = [
     path('tag/<int:pk>', views.ShowTagView().view, name='show_tag'),
     path('tag/new', views.CreateTagView().view, name='new_tag'),
     path('report/fetch', views.FetchReportView().view, name='fetch_report'),
+    path('search', views.SearchView().view, name='search'),
 ]

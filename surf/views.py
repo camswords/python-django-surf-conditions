@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from surf.forms import TagForm
+from surf.forms import TagForm, SearchForm
 from surf.models import SurfReport, Tag
 from surf.services import SurfReportGateway
 
@@ -78,3 +78,14 @@ class FetchReportView:
 
         return HttpResponseRedirect(reverse('surf:home'))
 
+
+class SearchView:
+    def view(self, request):
+        query = request.GET.get('query', None)
+
+        context = {
+            'form': SearchForm(request.GET) if query else SearchForm(),
+            'num_of_results': SurfReport.search_count(query),
+            'results': SurfReport.search(query),
+        }
+        return render(request, 'surf/search.html', context)
