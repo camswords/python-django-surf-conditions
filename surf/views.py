@@ -85,7 +85,7 @@ class SearchView:
 
         context = {
             'form': SearchForm(request.GET) if query else SearchForm(),
-            'num_of_results': SurfReport.search_count(query),
-            'results': SurfReport.search(query),
+            'num_of_results': SurfReport.objects.search_note(query).count(),
+            'results': SurfReport.objects.fetch_tags().search_note(query)[:10],
         }
         return render(request, 'surf/search.html', context)

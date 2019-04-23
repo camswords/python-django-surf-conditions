@@ -1,6 +1,8 @@
 from django.db import models
 import random
 
+from surf.managers import SurfReportQuerySet
+
 
 class Tag(models.Model):
     label = models.CharField(max_length=30, unique=True)
@@ -14,19 +16,7 @@ class SurfReport(models.Model):
     tags = models.ManyToManyField(Tag)
     note = models.TextField(max_length=150)
 
-    @staticmethod
-    def search(text):
-        if not text:
-            return []
-
-        return SurfReport.objects.prefetch_related('tags').filter(note__icontains=text)[:10]
-
-    @staticmethod
-    def search_count(text):
-        if not text:
-            return 0
-
-        return SurfReport.objects.prefetch_related('tags').filter(note__icontains=text).count()
+    objects = SurfReportQuerySet.as_manager()
 
     class Meta:
         indexes = [
