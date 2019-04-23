@@ -18,7 +18,7 @@
     {% endif %}
 
     {% if results %}
-        {% include 'surf/partials/tabular_reports.html' with reports=results only %}
+        {% include 'surf/partials/tabular_reports.html' with inherited_qp=query_params reports=results only %}
     {% endif %}
 
 {% endblock %}

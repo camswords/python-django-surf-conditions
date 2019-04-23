@@ -11,5 +11,6 @@ def get_value(dictionary, key_name, default_value=None):
 
 
 @register.simple_tag
-def query_params(**kwargs):
-    return '?' + urllib.parse.urlencode(kwargs)
+def query_params(other_params, **kwargs):
+    merged = {**(other_params or {}), **kwargs}
+    return '?' + urllib.parse.urlencode(merged)

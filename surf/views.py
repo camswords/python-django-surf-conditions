@@ -92,5 +92,7 @@ class SearchView:
             'form': SearchForm(request.GET) if query else SearchForm(),
             'num_of_results': SurfReport.objects.search_note(query).count(),
             'results': pages.get_page(request.GET.get('page')),
+            'query_params': {'query': query} if query else None,
         }
+
         return render(request, 'surf/search.html', context)

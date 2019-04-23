@@ -31,8 +31,8 @@
     <div class='pagination'>
         {% if reports.has_previous %}
             <div class='previous_page'>
-                <a href='{% query_params page=1 %}'>&laquo; first</a>
-                <a href='{% query_params page=reports.previous_page_number %}'>&lsaquo; previous</a>
+                <a href='{% query_params inherited_qp page=1 %}'>&laquo; first</a>
+                <a href='{% query_params inherited_qp page=reports.previous_page_number %}'>&lsaquo; previous</a>
             </div>
         {% endif %}
 
@@ -40,8 +40,8 @@
 
         {% if reports.has_next %}
             <div class='next_page'>
-                <a href='{% query_params page=reports.next_page_number %}'>next &rsaquo;</a>
-                <a href='{% query_params page=reports.paginator.num_pages %}'>last &raquo;</a>
+                <a href='{% query_params inherited_qp page=reports.next_page_number %}'>next &rsaquo;</a>
+                <a href='{% query_params inherited_qp page=reports.paginator.num_pages %}'>last &raquo;</a>
             </div>
         {% endif %}
     </div>
