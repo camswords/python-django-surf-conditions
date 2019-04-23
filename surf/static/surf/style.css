@@ -162,3 +162,8 @@ a:hover {
     color: #1e70bf;
     text-decoration: underline;
 }
+
+.result-count {
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+}

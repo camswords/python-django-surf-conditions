@@ -84,11 +84,13 @@ class FetchReportView:
 
 class SearchView:
     def view(self, request):
-        query = request.GET.get('query', None)
+        query = request.GET.get('query')
+        results = SurfReport.objects.fetch_tags().search_note(query)
+        pages = Paginator(results, 15)
 
         context = {
             'form': SearchForm(request.GET) if query else SearchForm(),
             'num_of_results': SurfReport.objects.search_note(query).count(),
-            'results': SurfReport.objects.fetch_tags().search_note(query)[:10],
+            'results': pages.get_page(request.GET.get('page')),
         }
         return render(request, 'surf/search.html', context)
