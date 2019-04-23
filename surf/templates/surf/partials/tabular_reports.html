@@ -25,3 +25,23 @@
         </tr>
     {% endfor %}
 </table>
+
+{% if reports.has_previous or reports.has_next %}
+    <div class='pagination'>
+        {% if reports.has_previous %}
+            <div class='previous_page'>
+                <a href='?page=1'>&laquo; first</a>
+                <a href='?page={{reports.previous_page_number}}'>&lsaquo; previous</a>
+            </div>
+        {% endif %}
+
+        <div class='current_page'>Page {{reports.number}} of {{reports.paginator.num_pages}}</div>
+
+        {% if reports.has_next %}
+            <div class='next_page'>
+                <a href='?page={{reports.next_page_number}}'>next &rsaquo;</a>
+                <a href='?page={{reports.paginator.num_pages}}'>last &raquo;</a>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

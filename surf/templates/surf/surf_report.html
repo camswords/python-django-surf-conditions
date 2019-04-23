@@ -10,7 +10,7 @@
         <div class='notes'>{{surf_report.note}}</div>
         <div class='tags'>
             {% for tag in tags %}
-                <div class='tag'>{{tag.label}}</div>
+                <a href="{% url 'surf:show_tag' tag.id %}" class='tag'>{{tag.label}}</a>
             {% endfor %}
         </div>
     </div>

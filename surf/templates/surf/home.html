@@ -10,7 +10,7 @@
             <div class='swell'>Current swell is {{latest.min_swell|floatformat:2}}m to {{latest.max_swell|floatformat:2}}m.</div>
             <div class='tags'>
                 {% for tag in latest.tags.all %}
-                    <div class='tag'>{{tag.label}}</div>
+                    <a href="{% url 'surf:show_tag' tag.id %}" class='tag'>{{tag.label}}</a>
                 {% endfor %}
             </div>
         </div>

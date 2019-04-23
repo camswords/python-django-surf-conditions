@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from surf.forms import TagForm, SearchForm
 from surf.models import SurfReport, Tag
@@ -9,11 +10,13 @@ from surf.services import SurfReportGateway
 
 class SurfReportHomeView:
     def view(self, request):
-        reports = SurfReport.objects.all().prefetch_related('tags').order_by('-captured_at')[:11]
+        latest = SurfReport.objects.fetch_tags().order_by_captured_at().first()
+        reports = SurfReport.objects.all().fetch_tags().order_by_captured_at()
+        pages = Paginator(reports, 15)
 
         context = {
-            'latest': reports[0] if reports else None,
-            'reports': reports[1:],
+            'latest': latest,
+            'reports': pages.get_page(request.GET.get('page')),
         }
 
         return render(request, 'surf/home.html', context)

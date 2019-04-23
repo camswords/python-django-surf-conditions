@@ -139,3 +139,26 @@ form .errorlist {
 .previous-header {
     margin: 2rem 0 0.5rem 0;
 }
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 1rem 0 0 0;
+    margin: 1rem 0 0 0;
+    font-size: 0.8rem;
+}
+
+.pagination > div {
+    margin: 0 0.3rem;
+}
+
+a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #1e70bf;
+    text-decoration: underline;
+}
