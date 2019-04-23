@@ -1,5 +1,4 @@
 {% extends "./frame.html" %}
-{% load humanize %}
 {% load surf_custom_filters %}
 
 {% block title %}Home{% endblock %}
@@ -22,30 +21,6 @@
     {% if reports %}
         <h4 class='previous-header'>Previous conditions</h4>
 
-        <table class='more_reports'>
-            <thead>
-                <th>Index</th>
-                <th>Id</th>
-                <th>Captured at</th>
-                <th class='swell'>Swell From</th>
-                <th class='swell'>Swell To</th>
-                <th class='tag'>Tags</th>
-            </thead>
-
-            {% for report in reports %}
-                <tr class="{% cycle 'row_a' 'row_b' %}" data-url="{% url 'surf:surf_report' report.id %}">
-                    <td>{{forloop.counter}}</td>
-                    <td>{{report.id}}</td>
-                    <td>{{report.captured_at|naturaltime}}</td>
-                    <td class='swell'>{{report.min_swell|floatformat:2}}m</td>
-                    <td class='swell'>{{report.max_swell|floatformat:2}}m</td>
-                    <td class='tags'>
-                        {% for tag in report.tags.all %}
-                            <a href="{% url 'surf:show_tag' tag.id %}" class='tag'>{{tag.label}}</a>
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% include 'surf/partials/tabular_reports.html' with reports=reports only %}
     {% endif %}
 {% endblock %}
