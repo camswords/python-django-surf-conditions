@@ -10,7 +10,7 @@
         <input type='submit' value='Search' />
     </form>
 
-    {% if form.is_bound %}
+    {% if search_term %}
         <h4 class='search-results'>Search results</h4>
 
         <div class='result-count'>{{num_of_results}} results found.</div>

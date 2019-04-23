@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator
 
+from surf import settings
 from surf.forms import TagForm, SearchForm
 from surf.models import SurfReport, Tag
 from surf.services import SurfReportGateway
@@ -83,16 +84,21 @@ class FetchReportView:
 
 
 class SearchView:
+
+    def __init__(self, results_per_page=settings.SEARCH_RESULTS_PER_PAGE):
+        self.results_per_page = results_per_page
+
     def view(self, request):
         query = request.GET.get('query')
-        results = SurfReport.objects.fetch_tags().search_note(query)
-        pages = Paginator(results, 15)
+        results = SurfReport.objects.fetch_tags().search(query)
+        pages = Paginator(results, self.results_per_page)
 
         context = {
             'form': SearchForm(request.GET) if query else SearchForm(),
-            'num_of_results': SurfReport.objects.search_note(query).count(),
+            'num_of_results': SurfReport.objects.search(query).count(),
             'results': pages.get_page(request.GET.get('page')),
             'query_params': {'query': query} if query else None,
+            'search_term': query,
         }
 
         return render(request, 'surf/search.html', context)
