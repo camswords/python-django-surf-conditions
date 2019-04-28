@@ -13,4 +13,5 @@ urlpatterns = [
     path('tag/new', views.CreateTagView().view, name='new_tag'),
     path('report/fetch', views.FetchReportView().view, name='fetch_report'),
     path('search', views.SearchView().view, name='search'),
+    path('api/surf_reports', views.ApiSurfResults().view, name='api_surf_reports'),
 ]

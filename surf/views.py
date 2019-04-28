@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -101,3 +101,44 @@ class SearchView:
         }
 
         return render(request, 'surf/search.html', context)
+
+
+class ApiSurfResults:
+
+    def __init__(self, results_per_page=settings.API_SURF_REPORTS_PER_PAGE):
+        self.results_per_page = results_per_page
+
+    def _build_surf_report(self, surf_report):
+        return {
+            'id': surf_report.id,
+            'captured_at': surf_report.captured_at.isoformat(),
+            'min_swell': round(surf_report.min_swell, 2),
+            'max_swell': round(surf_report.max_swell, 2),
+            'tags': [tag.label for tag in surf_report.tags.all()],
+        }
+
+    def _build_url_to_page(self, page):
+        return '%s%s?page=%d' % ('http://localhost:8000', reverse('surf:api_surf_reports'), page)
+
+    def view(self, request):
+        all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
+        reports = Paginator(all_reports, self.results_per_page).get_page(request.GET.get('page'))
+
+        body_content = {
+            'surf_reports': [self._build_surf_report(report) for report in reports],
+            'metadata': {
+                'page': reports.number,
+                'number_of_pages': reports.paginator.num_pages,
+            },
+            'links': {},
+        }
+
+        if reports.has_previous():
+            body_content['links']['first_page'] = self._build_url_to_page(1),
+            body_content['links']['previous_page'] = self._build_url_to_page(reports.previous_page_number()),
+
+        if reports.has_next():
+            body_content['links']['next_page'] = self._build_url_to_page(reports.next_page_number()),
+            body_content['links']['last_page'] = self._build_url_to_page(reports.paginator.num_pages),
+
+        return JsonResponse(body_content)
