@@ -101,6 +101,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# TODO: can you set up loggers just for the application?
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

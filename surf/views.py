@@ -11,13 +11,12 @@ from surf.services import SurfReportGateway
 
 class SurfReportHomeView:
     def view(self, request):
-        latest = SurfReport.objects.fetch_tags().order_by_captured_at().first()
-        reports = SurfReport.objects.all().fetch_tags().order_by_captured_at()
-        pages = Paginator(reports, 15)
+        all_reports = SurfReport.objects.all().fetch_tags().order_by_captured_at()
+        reports = Paginator(all_reports, 15).get_page(request.GET.get('page'))
 
         context = {
-            'latest': latest,
-            'reports': pages.get_page(request.GET.get('page')),
+            'latest': reports[0] if reports else None,
+            'reports': reports,
         }
 
         return render(request, 'surf/home.html', context)
