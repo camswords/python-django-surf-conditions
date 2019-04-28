@@ -117,8 +117,9 @@ class ApiSurfResults:
             'tags': [tag.label for tag in surf_report.tags.all()],
         }
 
-    def _build_url_to_page(self, page):
-        return '%s%s?page=%d' % ('http://localhost:8000', reverse('surf:api_surf_reports'), page)
+    def _build_url_to_page(self, request, page):
+        uri = request.build_absolute_uri(reverse('surf:api_surf_reports'))
+        return '%s?page=%d' % (uri, page)
 
     def view(self, request):
         all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
@@ -130,15 +131,17 @@ class ApiSurfResults:
                 'page': reports.number,
                 'number_of_pages': reports.paginator.num_pages,
             },
-            'links': {},
+            'links': {
+                'home': request.build_absolute_uri(reverse('surf:home')),
+            },
         }
 
         if reports.has_previous():
-            body_content['links']['first_page'] = self._build_url_to_page(1),
-            body_content['links']['previous_page'] = self._build_url_to_page(reports.previous_page_number()),
+            body_content['links']['first_page'] = self._build_url_to_page(request, 1)
+            body_content['links']['previous_page'] = self._build_url_to_page(request, reports.previous_page_number())
 
         if reports.has_next():
-            body_content['links']['next_page'] = self._build_url_to_page(reports.next_page_number()),
-            body_content['links']['last_page'] = self._build_url_to_page(reports.paginator.num_pages),
+            body_content['links']['next_page'] = self._build_url_to_page(request, reports.next_page_number())
+            body_content['links']['last_page'] = self._build_url_to_page(request, reports.paginator.num_pages)
 
         return JsonResponse(body_content)
