@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from surf import settings
 from surf.forms import TagForm, SearchForm
 from surf.models import SurfReport, Tag
-from surf.services import SurfReportGateway
+from surf.services import SurfReportGateway, FetchService
 
 
 class SurfReportHomeView:
@@ -105,8 +105,8 @@ class SearchView:
 
 class ApiSurfResults:
 
-    def __init__(self, results_per_page=settings.API_SURF_REPORTS_PER_PAGE):
-        self.results_per_page = results_per_page
+    def __init__(self, fetch_service=FetchService()):
+        self.fetch_service = fetch_service
 
     def url_to_page(self, request, page):
         uri = request.build_absolute_uri(reverse('surf:api_surf_reports'))
@@ -116,8 +116,7 @@ class ApiSurfResults:
         return {name: uri} if uri else {}
 
     def view(self, request):
-        all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
-        reports = Paginator(all_reports, self.results_per_page).get_page(request.GET.get('page'))
+        reports = self.fetch_service.load_page(request.GET.get('page', '1'))
 
         body_content = {
             'surf_reports': [{
@@ -127,17 +126,18 @@ class ApiSurfResults:
                 'max_swell': round(report.max_swell, 2),
                 'tags': [tag.label for tag in report.tags.all()],
                 'note': report.note,
-            } for report in reports],
+            } for report in reports.results],
             'metadata': {
-                'page': reports.number,
-                'number_of_pages': reports.paginator.num_pages,
+                'page': reports.page,
+                'number_of_pages': reports.num_pages,
+                'served_from_cache': reports.served_from_cache,
             },
             'links': {
                 'home': request.build_absolute_uri(reverse('surf:home')),
-                **(self.conditional_link('previous_page', reports.has_previous() and self.url_to_page(request, reports.previous_page_number()))),
-                **(self.conditional_link('next_page', reports.has_next() and self.url_to_page(request, reports.next_page_number()))),
+                **(self.conditional_link('previous_page', reports.has_previous() and self.url_to_page(request, reports.previous_page()))),
+                **(self.conditional_link('next_page', reports.has_next() and self.url_to_page(request, reports.next_page()))),
                 **(self.conditional_link('first_page', reports.has_previous() and self.url_to_page(request, 1))),
-                **(self.conditional_link('last_page', reports.has_next() and self.url_to_page(request, reports.paginator.num_pages))),
+                **(self.conditional_link('last_page', reports.has_next() and self.url_to_page(request, reports.num_pages))),
             },
         }
 

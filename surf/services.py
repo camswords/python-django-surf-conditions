@@ -2,6 +2,7 @@ from datetime import datetime
 
 import requests
 from django.core.exceptions import ImproperlyConfigured
+from django.core.paginator import Paginator
 from django.utils import timezone
 
 from surf.models import SurfReport, Note
@@ -42,3 +43,34 @@ class SurfReportGateway:
             raise SurfReportGatewayException('response returned at status code of {0}'.format(response.status_code), self.url, self.api_key)
 
         return SurfReportGatewayResponse().parse(response.json())
+
+
+class ReportsPage:
+    def __init__(self, results, page, num_pages, served_from_cache):
+        self.results = results
+        self.page = page
+        self.num_pages = num_pages
+        self.served_from_cache = served_from_cache
+
+    def has_next(self):
+        return self.page < self.num_pages
+
+    def has_previous(self):
+        return self.page > 1
+
+    def next_page(self):
+        return self.page + 1
+
+    def previous_page(self):
+        return self.page - 1
+
+
+class FetchService:
+    def __init__(self, results_per_page=settings.API_SURF_REPORTS_PER_PAGE):
+        self.results_per_page = results_per_page
+
+    def load_page(self, page_num):
+        all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
+        reports = Paginator(all_reports, self.results_per_page).get_page(page_num)
+
+        return ReportsPage(reports, reports.number, reports.paginator.num_pages, False)
