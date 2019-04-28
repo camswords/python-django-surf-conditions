@@ -108,40 +108,37 @@ class ApiSurfResults:
     def __init__(self, results_per_page=settings.API_SURF_REPORTS_PER_PAGE):
         self.results_per_page = results_per_page
 
-    def _build_surf_report(self, surf_report):
-        return {
-            'id': surf_report.id,
-            'captured_at': surf_report.captured_at.isoformat(),
-            'min_swell': round(surf_report.min_swell, 2),
-            'max_swell': round(surf_report.max_swell, 2),
-            'tags': [tag.label for tag in surf_report.tags.all()],
-        }
-
-    def _build_url_to_page(self, request, page):
+    def url_to_page(self, request, page):
         uri = request.build_absolute_uri(reverse('surf:api_surf_reports'))
         return '%s?page=%d' % (uri, page)
+
+    def conditional_link(self, name, uri):
+        return {name: uri} if uri else {}
 
     def view(self, request):
         all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
         reports = Paginator(all_reports, self.results_per_page).get_page(request.GET.get('page'))
 
         body_content = {
-            'surf_reports': [self._build_surf_report(report) for report in reports],
+            'surf_reports': [{
+                'id': report.id,
+                'captured_at': report.captured_at.isoformat(),
+                'min_swell': round(report.min_swell, 2),
+                'max_swell': round(report.max_swell, 2),
+                'tags': [tag.label for tag in report.tags.all()],
+                'note': report.note,
+            } for report in reports],
             'metadata': {
                 'page': reports.number,
                 'number_of_pages': reports.paginator.num_pages,
             },
             'links': {
                 'home': request.build_absolute_uri(reverse('surf:home')),
+                **(self.conditional_link('previous_page', reports.has_previous() and self.url_to_page(request, reports.previous_page_number()))),
+                **(self.conditional_link('next_page', reports.has_next() and self.url_to_page(request, reports.next_page_number()))),
+                **(self.conditional_link('first_page', reports.has_previous() and self.url_to_page(request, 1))),
+                **(self.conditional_link('last_page', reports.has_next() and self.url_to_page(request, reports.paginator.num_pages))),
             },
         }
-
-        if reports.has_previous():
-            body_content['links']['first_page'] = self._build_url_to_page(request, 1)
-            body_content['links']['previous_page'] = self._build_url_to_page(request, reports.previous_page_number())
-
-        if reports.has_next():
-            body_content['links']['next_page'] = self._build_url_to_page(request, reports.next_page_number())
-            body_content['links']['last_page'] = self._build_url_to_page(request, reports.paginator.num_pages)
 
         return JsonResponse(body_content)
