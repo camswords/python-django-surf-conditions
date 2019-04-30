@@ -29,10 +29,12 @@ class JsonSerialisation:
 
 class Cache:
     def __init__(self,
+                 key_prefix=settings.APP_VERSION,
                  connect_timeout=settings.MEMCACHED_SERVER_CONNECT_TIMEOUT_SECONDS,
                  timeout=settings.MEMCACHED_SERVER_READ_TIMEOUT_SECONDS,
                  serialisation_strategy=JsonSerialisation()):
         self._cache = Client(settings.MEMCACHED_SERVER_URI,
+                             key_prefix='%s:' % key_prefix,
                              serializer=serialisation_strategy.serialise,
                              deserializer=serialisation_strategy.deserialise,
                              connect_timeout=connect_timeout,

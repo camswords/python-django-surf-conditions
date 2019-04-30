@@ -5,6 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.paginator import Paginator
 from django.utils import timezone
 
+from surf.infrastructure import Cache
 from surf.models import SurfReport, Note
 from . import settings
 
@@ -66,7 +67,8 @@ class ReportsPage:
 
 
 class FetchService:
-    def __init__(self, results_per_page=settings.API_SURF_REPORTS_PER_PAGE):
+    def __init__(self, cache=Cache(), results_per_page=settings.API_SURF_REPORTS_PER_PAGE):
+        self.cache = cache
         self.results_per_page = results_per_page
 
     def load_page(self, page_num):
