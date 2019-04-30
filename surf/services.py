@@ -9,7 +9,6 @@ from surf.infrastructure import Cache
 from surf.models import SurfReport, Note
 from . import settings
 
-
 class SurfReportGatewayException(Exception):
     def __init__(self, message, url, api_key):
         msg = 'Failed to retrieve {0} due to {1}'.format(url.replace(api_key, '*****'), message)
@@ -47,11 +46,10 @@ class SurfReportGateway:
 
 
 class ReportsPage:
-    def __init__(self, results, page, num_pages, served_from_cache):
+    def __init__(self, results, page, num_pages):
         self.results = results
         self.page = page
         self.num_pages = num_pages
-        self.served_from_cache = served_from_cache
 
     def has_next(self):
         return self.page < self.num_pages
@@ -72,7 +70,9 @@ class FetchService:
         self.results_per_page = results_per_page
 
     def load_page(self, page_num):
-        all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
-        reports = Paginator(all_reports, self.results_per_page).get_page(page_num)
+        def fetch():
+            all_reports = SurfReport.objects.fetch_tags().order_by_captured_at().all()
+            reports = Paginator(all_reports, self.results_per_page).get_page(page_num)
+            return ReportsPage(reports, reports.number, reports.paginator.num_pages)
 
-        return ReportsPage(reports, reports.number, reports.paginator.num_pages, False)
+        return self.cache.get_or_set('surf_results_page_%s' % page_num, fetch)

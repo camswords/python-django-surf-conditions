@@ -101,6 +101,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
+        'LOCATION': 'localhost:11211',
+        'OPTIONS': {
+            'connect_timeout': 5000,
+            'timeout': 2000,
+            'ignore_exc': True,
+        },
+    },
+}
+
 # TODO: can you set up loggers just for the application?
 LOGGING = {
     'version': 1,

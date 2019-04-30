@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.core.cache import cache
 
 from surf import settings
 from surf.forms import TagForm, SearchForm
@@ -116,7 +117,7 @@ class ApiSurfResults:
         return {name: uri} if uri else {}
 
     def view(self, request):
-        reports = self.fetch_service.load_page(request.GET.get('page', '1'))
+        reports, served_from_cache = self.fetch_service.load_page(request.GET.get('page', '1'))
 
         body_content = {
             'surf_reports': [{
@@ -130,7 +131,7 @@ class ApiSurfResults:
             'metadata': {
                 'page': reports.page,
                 'number_of_pages': reports.num_pages,
-                'served_from_cache': reports.served_from_cache,
+                'served_from_cache': served_from_cache,
             },
             'links': {
                 'home': request.build_absolute_uri(reverse('surf:home')),
